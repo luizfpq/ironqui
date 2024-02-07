@@ -33,9 +33,15 @@
       command: realm discover IRON.LAN
 
     - name: Join Active Directory domain
-      command: echo acc355 | realm join IRON.LAN
+      command: echo acc355 | realm join -U 'Administrator' IRON.LAN
+      register: realm_join_result
       args:
         creates: /etc/krb5.keytab
+    
+     name: Print detailed logs for realm join
+      debug:
+        var: realm_join_result
+      when: realm_join_result|default({}).stderr_lines is defined
 
     - name: Verify AD user information
       command: id rt225848@iron.lan
