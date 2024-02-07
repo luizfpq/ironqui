@@ -38,7 +38,7 @@
       args:
         creates: /etc/krb5.keytab
     
-     name: Print detailed logs for realm join
+    - name: Print detailed logs for realm join
       debug:
         var: realm_join_result
       when: realm_join_result|default({}).stderr_lines is defined
