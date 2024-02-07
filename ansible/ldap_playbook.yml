@@ -1,0 +1,81 @@
+---
+- name: Configure Debian Server to Join Windows Active Directory Domain
+  hosts: debian_servers
+  become: yes
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - realmd
+        - sssd
+        - sssd-tools
+        - libnss-sss
+        - libpam-sss
+        - adcli
+        - samba-common-bin
+        - oddjob
+        - oddjob-mkhomedir
+        - packagekit
+
+    - name: Configure DNS settings
+      copy:
+        content: |
+          domain iron.lan
+          search iron.lan
+          nameserver 192.168.0.2
+          nameserver 1.1.1.1
+        dest: /etc/resolv.conf
+
+    - name: Discover Active Directory domain
+      command: realm discover iron.lan
+
+    - name: Join Active Directory domain
+      command: realm join iron.lan
+      args:
+        creates: /etc/krb5.keytab
+
+    - name: Verify AD user information
+      command: id rt225848@iron.lan
+      register: ad_user_info
+
+    - name: Add pam_mkhomedir configuration
+      lineinfile:
+        path: /etc/pam.d/common-session
+        line: "session optional        pam_mkhomedir.so skel=/etc/skel umask=077"
+
+    - name: Configure sssd to omit domain name
+      lineinfile:
+        path: /etc/sssd/sssd.conf
+        line: "use_fully_qualified_names = False"
+      notify: Restart sssd
+
+  handlers:
+    - name: Restart sssd
+      systemd:
+        name: sssd
+        state: restarted
+        daemon_reload: yes
+
+- name: Configure sssd for fixed UID/GID
+  hosts: debian_servers
+  become: yes
+
+  tasks:
+    - name: Configure sssd for fixed UID/GID
+      blockinfile:
+        path: /etc/sssd/sssd.conf
+        block: |
+          ldap_id_mapping = False
+          ldap_user_uid_number = uidNumber
+          ldap_user_gid_number = gidNumber
+      notify: Clear sssd cache and restart sssd
+
+  handlers:
+    - name: Clear sssd cache and restart sssd
+      command: "{{ item }}"
+      loop:
+        - rm -f /var/lib/sss/db/*
+        - systemctl restart sssd
