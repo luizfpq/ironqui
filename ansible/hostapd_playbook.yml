@@ -1,6 +1,6 @@
 ---
 - name: Configurar hostapd com autenticação RADIUS
-  hosts: seu_host
+  hosts: debian_servers
   become: true
   tasks:
     - name: Instalar hostapd, dnsmasq e freeradius
@@ -32,14 +32,14 @@
 
     - name: Configurar hostapd
       template:
-        src: hostapd.conf.j2
+        src: hostapd/hostapd.conf.j2
         dest: /etc/hostapd/hostapd.conf
       notify:
         - Reiniciar serviço hostapd
 
     - name: Configurar freeradius
       template:
-        src: radiusd.conf.j2
+        src: hostapd/radiusd.conf.j2
         dest: /etc/freeradius/3.0/sites-available/default
       notify:
         - Reiniciar serviço freeradius
