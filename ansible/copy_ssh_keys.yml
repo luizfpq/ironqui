@@ -1,0 +1,21 @@
+---
+- name: Copy SSH Keys
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Read inventory file
+      slurp:
+        src: inventory.ini
+      register: inventory_content
+
+    - name: Extract and copy SSH keys
+      set_fact:
+        inventory_lines: "{{ inventory_content['content'] | b64decode | split('\n') }}"
+      loop: "{{ inventory_lines }}"
+      when: "'[' not in item"
+
+      - name: Execute ssh-copy-id
+        ansible.builtin.command: 
+          cmd: "sshpass -p '{{ item.split('=')[3] }}' ssh-copy-id '{{ item.split('=')[2] }}@{{ item.split('=')[1] }}'"
+        loop: "{{ inventory_lines }}"
+        when: "'[' not in item"
