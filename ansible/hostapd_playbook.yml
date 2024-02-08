@@ -35,6 +35,10 @@
         dest: /etc/hostapd/hostapd.conf
       notify:
         - Reiniciar serviço hostapd
+    
+    - name: Desmascarar o serviço hostapd
+      command: "systemctl unmask hostapd"
+      become: true
 
     - name: Habilitar e iniciar serviço hostapd
       systemd:
