@@ -19,7 +19,6 @@
         enabled: false
         state: stopped
       loop:
-        - hostapd
         - dnsmasq
         - freeradius
 
@@ -36,6 +35,12 @@
         dest: /etc/hostapd/hostapd.conf
       notify:
         - Reiniciar serviço hostapd
+
+    - name: Habilitar e iniciar serviço hostapd
+      systemd:
+        name: hostapd
+        enabled: true
+        state: started
 
     - name: Configurar freeradius
       template:
