@@ -33,15 +33,17 @@
       command: realm discover IRON.LAN
 
     - name: Join Active Directory domain
-      command: echo acc355 | realm join -U 'Administrator' IRON.LAN
-      register: realm_join_result
+      command: realm join -U 'Administrator' IRON.LAN
+      vars:
+        ansible_become_password: acc355
+      register: realm_join_command_result
       args:
         creates: /etc/krb5.keytab
-    
-    - name: Print detailed logs for realm join
+
+    - name: Print detailed logs for realm join command
       debug:
-        var: realm_join_result
-      when: realm_join_result|default({}).stderr_lines is defined
+        var: realm_join_command_result
+      when: realm_join_command_result|default({}).stderr_lines is defined
 
     - name: Verify AD user information
       command: id rt225848@iron.lan
