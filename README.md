@@ -21,7 +21,7 @@ Altere o `ldap_playbook.yml` e adicione o seguinte conteúdo.
 
 Substitua `SEU_IP_DNS`, `SEU_LDAP_IP`, `SEU_LDAP.SEU_CN`, `SEU_USUARIO_LDAP`, `SEU_DOMINIO_LDAP`, `SUA_SENHA` pelos seus próprios valores.
 
-## Passo 4: Execute o playbook
+## Execute o playbook
 
 Execute o playbook usando o seguinte comando:
 
