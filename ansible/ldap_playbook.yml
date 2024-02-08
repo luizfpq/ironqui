@@ -24,29 +24,29 @@
     - name: Configure DNS settings
       copy:
         content: |
-          domain iron.lan
-          search iron.lan
-          nameserver 192.168.0.2
+          domain SEU_LDAP.SEU_CN
+          search SEU_LDAP.SEU_CN
+          nameserver SEU_LDAP_IP
           nameserver 1.1.1.1
         dest: /etc/resolv.conf
 
     - name: Discover Active Directory domain
-      command: realm discover IRON.LAN
+      command: realm discover SEU_LDAP.SEU_CN
 
     - name: Join Active Directory domain
       expect:
-        command: realm join -U 'Administrator' IRON.LAN
+        command: realm join -U 'Administrator' SEU_LDAP.SEU_CN
         responses:
-          Senha para Administrator: "acc355"
+          Senha para Administrator: "SUA_SENHA"
         timeout: 60  # Increase the timeout to 60 seconds
       vars:
-        ansible_become_password: acc355
+        ansible_become_password: SUA_SENHA
       args:
         creates: /etc/krb5.keytab
 
 
     - name: Verify AD user information
-      command: id rt225848@iron.lan
+      command: id SEU_USUARIO@SEU_LDAP.SEU_CN
       register: ad_user_info
 
     - name: Add pam_mkhomedir configuration
