@@ -4,7 +4,7 @@
   become: yes
 
   tasks:
-    - name: Install required packages
+    - name: Instalar pacotes requeridos
       apt:
         name: "{{ item }}"
         state: present
@@ -21,58 +21,58 @@
         - oddjob-mkhomedir
         - packagekit
 
-    - name: Configure DNS settings
+    - name: Definir configurações de DNS
       copy:
-        content: |
+        content: Definir o domínio do Active Directory
           domain SEU_LDAP.SEU_CN
           search SEU_LDAP.SEU_CN
           nameserver SEU_LDAP_IP
           nameserver SEU_IP_DNS
         dest: /etc/resolv.conf
 
-    - name: Discover Active Directory domain
+    - name: 
       command: realm discover SEU_LDAP.SEU_CN
 
-    - name: Join Active Directory domain
+    - name: Ingressar no domínio do Active Directory
       expect:
         command: realm join -U 'Administrator' SEU_LDAP.SEU_CN
         responses:
           Senha para Administrator: "SUA_SENHA"
-        timeout: 60  # Increase the timeout to 60 seconds
+        timeout: 60  # Aumentar o timeout para 60 sec
       vars:
         ansible_become_password: SUA_SENHA
       args:
         creates: /etc/krb5.keytab
 
 
-    - name: Verify AD user information
+    - name: Verifique as informações do usuário AD
       command: id SEU_USUARIO@SEU_LDAP.SEU_CN
       register: ad_user_info
 
-    - name: Add pam_mkhomedir configuration
+    - name: Adicionar configuração pam_mkhomedir
       lineinfile:
         path: /etc/pam.d/common-session
         line: "session optional        pam_mkhomedir.so skel=/etc/skel umask=077"
 
-    - name: Configure sssd to omit domain name
+    - name: Configure o sssd para omitir o nome de domínio
       lineinfile:
         path: /etc/sssd/sssd.conf
         line: "use_fully_qualified_names = False"
       notify: Restart sssd
 
   handlers:
-    - name: Restart sssd
+    - name: Reiniciar sssd
       systemd:
         name: sssd
         state: restarted
         daemon_reload: yes
 
-- name: Configure sssd for fixed UID/GID
+- name: Configurar sssd para UID/GID fixo
   hosts: debian_servers
   become: yes
 
   tasks:
-    - name: Configure sssd for fixed UID/GID
+    - name: Configurar sssd para UID/GID fixo
       blockinfile:
         path: /etc/sssd/sssd.conf
         block: |
@@ -82,7 +82,7 @@
       notify: Clear sssd cache and restart sssd
 
   handlers:
-    - name: Clear sssd cache and restart sssd
+    - name: Limpe o cache do SSD e reinicie o SSD
       command: "{{ item }}"
       loop:
         - rm -f /var/lib/sss/db/*

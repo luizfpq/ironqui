@@ -2,19 +2,19 @@
 - name: Copy SSH Keys
   hosts: debian_servers
   tasks:
-    - name: Extract server information
+    - name: Extrair informações do servidor
       set_fact:
         host_info: "{{ item.split(' ') }}"
       loop: "{{ lookup('file', 'inventory.ini').split('\n') }}"
       when: item.startswith('debian_server')
 
-    - name: Add host to known_hosts
+    - name: Adicionar host a 'known_hosts'
       ansible.builtin.shell:
         cmd: "ssh-keyscan -H {{ host_info[2].split('=')[1] }} >> ~/.ssh/known_hosts"
       loop: "{{ host_info }}"
       when: "'[' not in item and item.startswith('debian_server')"
 
-    - name: Copy SSH keys
+    - name: Copiar chaves SSH
       community.general.ssh_keypair:
         path: "~/.ssh/id_rsa"
         pubkey_file: "~/.ssh/id_rsa.pub"

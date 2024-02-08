@@ -4,35 +4,22 @@
 
 Lembre-se de ajustar as informações específicas do seu ambiente, como endereços IP, nomes de usuário e senhas. Neste tutorial, vamos criar um playbook Ansible para configurar um servidor Debian 12 para autenticação LDAP, integrando-o a um domínio.
 
-**Pré-requisitos (c**ertifique-se de ter os seguintes pré-requisitos instalados):
+**Pré-requisitos (certifique-se de ter os seguintes pré-requisitos instalados)**:
 - Ansible no servidor Ansible
 - SSH configurado no servidor Debian
 - Conhecimento das configurações do seu servidor LDAP (endereço IP, usuário, senha)
 
-## Passo 1: Crie um diretório para o playbook
+## Adicione os equipamentos ao inventário (inventory.ini)
 
-```bash
-mkdir ansible-debian-ldap
-cd ansible-debian-ldap
-```
-
-## Passo 2: Adicione os equipamentos ao inventário (inventory.ini)
-
-Crie um arquivo chamado `inventory.ini` e adicione as informações do seu servidor Debian.
-
-```yaml
-[debian_servers]
-debian_server0 ansible_host=SEU_DEBIAN ansible_user=SEU_USUARIO ansible_ssh_pass=SUA_SENHA ansible_become_pass=SUA_SENHA
-debian_server1 ansible_host=SEU_DEBIAN ansible_user=SEU_USUARIO ansible_ssh_pass=SUA_SENHA ansible_become_pass=SUA_SENHA
-```
+No arquivo chamado `inventory.ini` e adicione as informações do seus Debians que receberão as configurações.
 
 Substitua `SEU_DEBIAN`, `SEU_USUARIO_SSH`, `SUA_SENHA_SSH` e `SUA_SENHA_SUDO` pelos seus próprios valores.
 
-## Passo 3: No playbook Ansible (ldap_setup.yml)
+## No playbook Ansible (ldap_setup.yml)
 
 Altere o `ldap_playbook.yml` e adicione o seguinte conteúdo.
 
-Substitua `SEU_IP_DNS`, `SEU_LDAP_IP`, `SEU_LDAP.SEU_CN`, `SEU_USUARIO_LDAP` e `SEU_DOMINIO_LDAP`, `SUA_SENHA` pelos seus próprios valores.
+Substitua `SEU_IP_DNS`, `SEU_LDAP_IP`, `SEU_LDAP.SEU_CN`, `SEU_USUARIO_LDAP`, `SEU_DOMINIO_LDAP`, `SUA_SENHA` pelos seus próprios valores.
 
 ## Passo 4: Execute o playbook
 
