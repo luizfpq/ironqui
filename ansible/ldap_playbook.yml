@@ -9,6 +9,7 @@
         name: "{{ item }}"
         state: present
       loop:
+        - python3-pexpect
         - realmd
         - sssd
         - sssd-tools
