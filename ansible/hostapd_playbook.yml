@@ -12,6 +12,8 @@
         - dnsmasq
         - freeradius
         - freeradius-utils
+        - libpam-ldap
+        - libnss-ldap
 
     - name: Desativar serviços
       systemd:

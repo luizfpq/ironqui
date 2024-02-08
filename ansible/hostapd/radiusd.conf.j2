@@ -3,14 +3,15 @@
 authorize {
     preprocess
     files
+    ldap
     expiration
     logintime
     pap
 }
 
 authenticate {
-    Auth-Type PAP {
-        pap
+    Auth-Type LDAP {
+        ldap
     }
 }
 
