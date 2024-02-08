@@ -1,0 +1,19 @@
+# /etc/freeradius/3.0/sites-available/default
+
+authorize {
+    preprocess
+    files
+    expiration
+    logintime
+    pap
+}
+
+authenticate {
+    Auth-Type PAP {
+        pap
+    }
+}
+
+session {
+    radutmp
+}

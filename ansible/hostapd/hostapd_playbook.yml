@@ -1,0 +1,61 @@
+---
+- name: Configurar hostapd com autenticação RADIUS
+  hosts: seu_host
+  become: true
+  tasks:
+    - name: Instalar hostapd, dnsmasq e freeradius
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - hostapd
+        - dnsmasq
+        - freeradius
+        - freeradius-utils
+
+    - name: Desativar serviços
+      systemd:
+        name: "{{ item }}"
+        enabled: false
+        state: stopped
+      loop:
+        - hostapd
+        - dnsmasq
+        - freeradius
+
+    - name: Configurar interface de rede
+      lineinfile:
+        path: /etc/network/interfaces
+        line: "iface wlan0 inet static\n  address 192.168.1.1\n  netmask 255.255.255.0"
+      notify:
+        - Reiniciar serviços de rede
+
+    - name: Configurar hostapd
+      template:
+        src: hostapd.conf.j2
+        dest: /etc/hostapd/hostapd.conf
+      notify:
+        - Reiniciar serviço hostapd
+
+    - name: Configurar freeradius
+      template:
+        src: radiusd.conf.j2
+        dest: /etc/freeradius/3.0/sites-available/default
+      notify:
+        - Reiniciar serviço freeradius
+
+  handlers:
+    - name: Reiniciar serviços de rede
+      service:
+        name: networking
+        state: restarted
+
+    - name: Reiniciar serviço hostapd
+      service:
+        name: hostapd
+        state: restarted
+
+    - name: Reiniciar serviço freeradius
+      service:
+        name: freeradius
+        state: restarted
