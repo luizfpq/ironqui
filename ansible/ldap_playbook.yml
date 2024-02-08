@@ -27,7 +27,7 @@
           domain SEU_LDAP.SEU_CN
           search SEU_LDAP.SEU_CN
           nameserver SEU_LDAP_IP
-          nameserver 1.1.1.1
+          nameserver SEU_IP_DNS
         dest: /etc/resolv.conf
 
     - name: Discover Active Directory domain
