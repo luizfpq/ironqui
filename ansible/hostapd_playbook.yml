@@ -25,7 +25,7 @@
     - name: Configurar interface de rede
       lineinfile:
         path: /etc/network/interfaces
-        line: "iface wlan0 inet static\n  address 192.168.1.1\n  netmask 255.255.255.0"
+        line: "iface wlo1 inet static\n  address 192.168.1.1\n  netmask 255.255.255.0"
       notify:
         - Reiniciar serviços de rede
 
