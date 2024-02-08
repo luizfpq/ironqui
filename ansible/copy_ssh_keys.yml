@@ -1,21 +1,22 @@
 ---
 - name: Copy SSH Keys
-  hosts: localhost
-  gather_facts: false
+  hosts: debian_servers
   tasks:
-    - name: Read inventory file
-      slurp:
-        src: inventory.ini
-      register: inventory_content
-
-    - name: Extract and copy SSH keys
+    - name: Extract server information
       set_fact:
-        inventory_lines: "{{ inventory_content['content'] | b64decode | split('\n') }}"
-      loop: "{{ inventory_lines }}"
-      when: "'[' not in item"
+        host_info: "{{ item.split(' ') }}"
+      loop: "{{ lookup('file', 'inventory.ini').split('\n') }}"
+      when: item.startswith('debian_server')
 
-      - name: Execute ssh-copy-id
-        ansible.builtin.command: 
-          cmd: "sshpass -p '{{ item.split('=')[3] }}' ssh-copy-id '{{ item.split('=')[2] }}@{{ item.split('=')[1] }}'"
-        loop: "{{ inventory_lines }}"
-        when: "'[' not in item"
+    - name: Add host to known_hosts
+      ansible.builtin.shell:
+        cmd: "ssh-keyscan -H {{ host_info[2].split('=')[1] }} >> ~/.ssh/known_hosts"
+      loop: "{{ host_info }}"
+      when: "'[' not in item and item.startswith('debian_server')"
+
+    - name: Copy SSH keys
+      community.general.ssh_keypair:
+        path: "~/.ssh/id_rsa"
+        pubkey_file: "~/.ssh/id_rsa.pub"
+      loop: "{{ host_info }}"
+      when: "'[' not in item and item.startswith('debian_server')"
