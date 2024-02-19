@@ -1,0 +1,80 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Load package manager
+      set_fact:
+        pkg_manager: "apt"
+
+    - name: Define applications
+      set_fact:
+        applications:
+          - autoconf
+          - gvfs
+          - gvfs-bin
+          - gvfs-common
+          - gvfs-daemons
+          - gvfs-libs
+          - libmtp-dev
+          - gvfs-backends
+          - apt-transport-https
+          - htop
+          - gnome-disk-utility
+          - apparmor
+          - asciinema
+          - axel
+          - curl
+          - fonts-lyx
+          - galculator
+          - gimp
+          - inkscape
+          - gtk-update-icon-cache
+          - keepassxc
+          - lightning
+          - locate
+          - lsb-release
+          - menulibre
+          - neofetch
+          - net-tools
+          - software-properties-common
+          - thunderbird
+          - thunderbird-l10n-pt-br
+          - transmission-gtk
+          - unrar
+          - unzip
+
+    - name: Verify XFCE
+      shell: "dpkg -s task-xfce-desktop"
+      register: xfce_status
+      ignore_errors: yes
+
+    - name: Install XFCE if not installed
+      block:
+        - name: Prompt to install task-xfce-desktop
+          pause:
+            prompt: "Pacote task-xfce-desktop não está instalado, deseja instalar? Tecle Enter para continuar ou Ctrl+C para cancelar."
+
+        - name: Install task-xfce-desktop
+          shell: "{{ pkg_manager }} task-xfce-desktop"
+          async: 1000
+          poll: 0
+          become: yes
+          ignore_errors: yes
+          register: install_result
+
+        - name: Reboot if task-xfce-desktop is installed
+          command: reboot
+          async: 0
+          poll: 0
+          become: yes
+          when: "'task-xfce-desktop' in install_result.stdout"
+      when: xfce_status.rc != 0
+
+    - name: Update repositories
+      apt:
+        update_cache: yes
+
+    - name: Install base applications
+      apt:
+        name: "{{ item }}"
+      with_items: "{{ applications }}"
