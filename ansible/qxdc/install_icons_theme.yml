@@ -1,16 +1,8 @@
 ---
-- name: Verify Theme
-  stat:
-    path: "/usr/share/themes/Arc-Dark"
-  register: theme_installed
-
-- name: Install Theme if not installed
-  block:
-    - name: Install Arc Theme
-      become: yes
-      apt:
-        name: arc-theme
-      when: theme_installed.stat.exists == false
+- name: Install Arc Theme
+  become: yes
+  apt:
+    name: arc-theme
 
 - name: Verify Icons
   stat:
@@ -19,6 +11,11 @@
 
 - name: Install Icons if not installed
   block:
+    - name: Install autotools package
+      become: yes
+      apt:
+        name: autotools
+
     - name: Clone Arc Icon Theme repository
       git:
         repo: "https://github.com/horst3180/arc-icon-theme"
