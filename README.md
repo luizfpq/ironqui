@@ -1,6 +1,6 @@
 # Ironqui
 
-Este repositório contém um conjunto de produtos playbooks do Ansible, proporcionando a facilidade de implantação do meu homelab. O objetivo futuro é desenvolver menus interativos que permitam a instalação personalizada de opções conforme a demanda. Atualmente, os playbooks são identificados o formato "item_playbook", enquanto as pastas dentro da mesma estrutura, sem o sufixo "playbook", indicam arquivos específicos de um item ou aplicação associado a esse playbook.
+Este repositório contém um conjunto de playbooks do Ansible, proporcionando a facilidade de implantação do meu homelab. O objetivo futuro é desenvolver menus interativos que permitam a instalação personalizada de opções conforme a demanda. Atualmente, os playbooks são identificados o formato "item_playbook", enquanto as pastas dentro da mesma estrutura, sem o sufixo "playbook", indicam arquivos específicos de um item ou aplicação associado a esse playbook.
 
 ## Estrutura do Repositório
 
