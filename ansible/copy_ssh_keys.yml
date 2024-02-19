@@ -1,22 +1,41 @@
 ---
-- name: Copy SSH Keys
-  hosts: debian_servers
+- name: Copiar chaves SSH
+  hosts: qxdc
+  become: true
+  become_method: sudo
+  become_user: root
+
+  vars_prompt:
+    - name: ansible_user
+      prompt: "Digite seu usuário SSH"
+      private: no
+    - name: ansible_ssh_pass
+      prompt: "Digite sua senha SSH"
+      private: yes
+    - name: ansible_become_pass
+      prompt: "Digite sua senha SUDO"
+      private: yes
+
   tasks:
-    - name: Extrair informações do servidor
-      set_fact:
-        host_info: "{{ item.split(' ') }}"
-      loop: "{{ lookup('file', 'inventory.ini').split('\n') }}"
-      when: item.startswith('debian_server')
+    - name: Garantir que o diretório ~/.ssh existe no servidor de aplicação
+      ansible.builtin.file:
+        path: "~/.ssh"
+        state: directory
+        mode: '0700'
+      become_user: "{{ ansible_user }}"
 
-    - name: Adicionar host a 'known_hosts'
+    - name: Copiar chaves SSH para o servidor de aplicação
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "~/.ssh/"
+        mode: '0600'
+      with_fileglob:
+        - ~/.ssh/*
+      become_user: "{{ ansible_user }}"
+
+    - name: Adicionar chaves ao agente SSH no servidor de aplicação
       ansible.builtin.shell:
-        cmd: "ssh-keyscan -H {{ host_info[2].split('=')[1] }} >> ~/.ssh/known_hosts"
-      loop: "{{ host_info }}"
-      when: "'[' not in item and item.startswith('debian_server')"
-
-    - name: Copiar chaves SSH
-      community.general.ssh_keypair:
-        path: "~/.ssh/id_rsa"
-        pubkey_file: "~/.ssh/id_rsa.pub"
-      loop: "{{ host_info }}"
-      when: "'[' not in item and item.startswith('debian_server')"
+        cmd: ssh-add ~/.ssh/{{ item }}
+      with_fileglob:
+        - "~/.ssh/*"
+      become_user: "{{ ansible_user }}"
