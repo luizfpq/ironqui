@@ -21,4 +21,3 @@
       file:
         path: "/tmp/vscode.deb"
         state: absent
-
