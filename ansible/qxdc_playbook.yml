@@ -4,4 +4,4 @@
   tasks:
     - name: Execute QXDC Playbooks
       include_tasks: "{{ item }}"
-      loop: "{{ query('fileglob', 'qxdc/*.yml') }}"
+      loop: "{{ query('fileglob', 'qxdc/*.yml') | sort | reverse}}"

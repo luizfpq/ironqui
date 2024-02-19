@@ -11,10 +11,16 @@
 
 - name: Install Icons if not installed
   block:
-    - name: Install autotools package
+    - name: Install dh-autoreconf package
       become: yes
       apt:
         name: dh-autoreconf
+
+    - name: Clean previous existing Arc Icon Theme Directory
+      become: yes
+      file:
+        path: "/tmp/arc-icon-theme"
+        state: absent
 
     - name: Clone Arc Icon Theme repository
       git:
@@ -24,7 +30,8 @@
       when: icons_installed.stat.exists == false
 
     - name: Build and install Arc Icon Theme
-      shell: "./autogen.sh --prefix=/usr && sudo make install"
+      become: yes
+      shell: "sh /tmp/arc-icon-theme/autogen.sh --prefix=/usr && make install"
       args:
         chdir: "/tmp/arc-icon-theme"
       when: icons_installed.stat.exists == false

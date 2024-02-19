@@ -1,0 +1,27 @@
+---
+- name: Install Google Chrome if not present
+  become: yes
+  block:
+    - name: Check if Google Chrome is already installed
+      command: "google-chrome-stable --version"
+      register: chrome_version_output
+      ignore_errors: true
+
+    - name: Install Google Chrome if not present
+      block:
+        - name: Download Google Chrome package
+          get_url:
+            url: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+            dest: "/tmp/google-chrome-stable_current_amd64.deb"
+          when: chrome_version_output.rc != 0
+
+        - name: Install Google Chrome package
+          apt:
+            deb: "/tmp/google-chrome-stable_current_amd64.deb"
+          when: chrome_version_output.rc != 0
+
+        - name: Clean up downloaded packages
+          file:
+            path: "/tmp/google-chrome-stable_current_amd64.deb"
+            state: absent
+          when: chrome_version_output.rc != 0

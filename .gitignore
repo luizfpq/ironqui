@@ -1,1 +1,4 @@
 inventory.ini
+ansible/Makefile
+ansible/config.status
+ansible/config.log

@@ -11,6 +11,7 @@
     get_url:
       url: "https://go.microsoft.com/fwlink/?LinkID=760868"
       dest: "/tmp/vscode.deb"
+    when: vscode_installed.stat.exists == false
 
   - name: Install VSCode
     apt:

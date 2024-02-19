@@ -8,7 +8,6 @@
         applications:
           - autoconf
           - gvfs
-          - gvfs-bin
           - gvfs-common
           - gvfs-daemons
           - gvfs-libs
@@ -27,7 +26,6 @@
           - inkscape
           - gtk-update-icon-cache
           - keepassxc
-          - lightning
           - locate
           - lsb-release
           - menulibre
@@ -37,7 +35,7 @@
           - thunderbird
           - thunderbird-l10n-pt-br
           - transmission-gtk
-          - unrar
+          - unrar-free
           - unzip
 
     - name: Update repositories
