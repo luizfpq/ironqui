@@ -7,6 +7,7 @@
 - name: Install Theme if not installed
   block:
     - name: Install Arc Theme
+      become: yes
       apt:
         name: arc-theme
       when: theme_installed.stat.exists == false
