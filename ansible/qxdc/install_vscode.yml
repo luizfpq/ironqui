@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- name: Install VSCode if not already installed
   become: yes
   tasks:
     - name: Check if VSCode is already installed
@@ -7,20 +7,18 @@
         path: "/usr/bin/code"
       register: vscode_installed
 
-    - name: Install VSCode if not already installed
-      block:
-        - name: Download VSCode .deb package
-          get_url:
-            url: "https://go.microsoft.com/fwlink/?LinkID=760868"
-            dest: "/tmp/vscode.deb"
+    - name: Download VSCode .deb package
+      get_url:
+        url: "https://go.microsoft.com/fwlink/?LinkID=760868"
+        dest: "/tmp/vscode.deb"
 
-        - name: Install VSCode
-          apt:
-            deb: "/tmp/vscode.deb"
-          when: vscode_installed.stat.exists == false
-
-        - name: Clean up downloaded package
-          file:
-            path: "/tmp/vscode.deb"
-            state: absent
+    - name: Install VSCode
+      apt:
+        deb: "/tmp/vscode.deb"
       when: vscode_installed.stat.exists == false
+
+    - name: Clean up downloaded package
+      file:
+        path: "/tmp/vscode.deb"
+        state: absent
+

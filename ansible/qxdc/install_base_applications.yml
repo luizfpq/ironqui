@@ -1,7 +1,4 @@
 ---
-- hosts: all
-  become: yes
-  tasks:
     - name: Load package manager
       set_fact:
         pkg_manager: "apt"

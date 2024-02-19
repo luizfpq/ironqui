@@ -1,0 +1,32 @@
+---
+- name: Verify Theme
+  stat:
+    path: "/usr/share/themes/Arc-Dark"
+  register: theme_installed
+
+- name: Install Theme if not installed
+  block:
+    - name: Install Arc Theme
+      apt:
+        name: arc-theme
+      when: theme_installed.stat.exists == false
+
+- name: Verify Icons
+  stat:
+    path: "/usr/share/icons/Arc/"
+  register: icons_installed
+
+- name: Install Icons if not installed
+  block:
+    - name: Clone Arc Icon Theme repository
+      git:
+        repo: "https://github.com/horst3180/arc-icon-theme"
+        dest: "/tmp/arc-icon-theme"
+        depth: 1
+      when: icons_installed.stat.exists == false
+
+    - name: Build and install Arc Icon Theme
+      shell: "./autogen.sh --prefix=/usr && sudo make install"
+      args:
+        chdir: "/tmp/arc-icon-theme"
+      when: icons_installed.stat.exists == false
