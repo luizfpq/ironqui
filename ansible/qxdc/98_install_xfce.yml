@@ -1,0 +1,18 @@
+---
+- name: Verify XFCE
+  become: yes
+  block:
+    - name: Check if XFCE is installed
+      shell: "dpkg -s task-xfce-desktop"
+      register: xfce_status
+      ignore_errors: true  # Ignora erros para que a execução continue mesmo se o pacote não estiver instalado
+
+    - name: Install XFCE if not installed
+      ansible.builtin.apt:
+        name: task-xfce-desktop
+        state: present
+      when: "'Status: install ok installed' not in xfce_status.stdout"
+
+    - name: Display XFCE status
+      debug:
+        var: xfce_status.stdout_lines  # Exibe as linhas de saída para análise

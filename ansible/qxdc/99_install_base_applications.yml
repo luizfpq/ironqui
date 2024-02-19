@@ -6,6 +6,8 @@
     - name: Define applications
       set_fact:
         applications:
+          - wget
+          - git
           - autoconf
           - gvfs
           - gvfs-common
