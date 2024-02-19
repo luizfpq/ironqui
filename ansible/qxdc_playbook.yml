@@ -1,0 +1,7 @@
+---
+- hosts: qxdc
+  gather_facts: false
+  tasks:
+    - name: Execute QXDC Playbooks
+      include_tasks: "{{ item }}"
+      loop: "{{ query('fileglob', 'qxdc/*.yml') | sort | reverse}}"

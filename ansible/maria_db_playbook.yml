@@ -1,0 +1,37 @@
+---
+- name: Criar usuários e conceder acesso ao MariaDB
+  hosts: maria_db_server
+  become: yes
+  vars:
+    arquivo_csv: /maria_db/userData.csv
+    nome_banco_padrao: "db_usuario_"
+
+  tasks:
+    - name: Leitura do arquivo CSV
+      read_csv:
+        path: "{{ arquivo_csv }}"
+        delimiter: ','   # Especifique o delimitador correto se não for uma vírgula
+      register: usuarios_csv
+
+    - name: Criar usuários no sistema Linux
+      user:
+        name: "{{ item.nome }}"
+        password: "{{ item.senha | password_hash('sha512') }}"
+        state: present
+      with_items: "{{ usuarios_csv.list | default([]) }}"
+
+    - name: Conceder acesso ao MariaDB
+      mysql_user:
+        name: "{{ item.nome }}"
+        password: "{{ item.senha }}"
+        host: localhost
+        priv: '*.*:ALL'
+        state: present
+      with_items: "{{ usuarios_csv.list | default([]) }}"
+      when: mysql_user_privilege_check.results | selectattr('item.name', 'equalto', item.nome) | list | length == 0
+
+    - name: Criar banco de dados para cada usuário
+      mysql_db:
+        name: "{{ nome_banco_padrao + item.nome }}"
+        state: present
+      with_items: "{{ usuarios_csv.list | default([]) }}"

@@ -1,0 +1,50 @@
+---
+    - name: Load package manager
+      set_fact:
+        pkg_manager: "apt"
+
+    - name: Define applications
+      set_fact:
+        applications:
+          - autoconf
+          - gvfs
+          - gvfs-common
+          - gvfs-daemons
+          - gvfs-libs
+          - libmtp-dev
+          - gvfs-backends
+          - apt-transport-https
+          - htop
+          - gnome-disk-utility
+          - apparmor
+          - asciinema
+          - axel
+          - curl
+          - fonts-lyx
+          - galculator
+          - gimp
+          - inkscape
+          - gtk-update-icon-cache
+          - keepassxc
+          - locate
+          - lsb-release
+          - menulibre
+          - neofetch
+          - net-tools
+          - software-properties-common
+          - thunderbird
+          - thunderbird-l10n-pt-br
+          - transmission-gtk
+          - unrar-free
+          - unzip
+
+    - name: Update repositories
+      become: yes
+      apt:
+        update_cache: yes
+
+    - name: Install base applications
+      become: yes
+      apt:
+        name: "{{ item }}"
+      with_items: "{{ applications }}"
