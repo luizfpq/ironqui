@@ -1,0 +1,14 @@
+
+PLAY [qxdc] ********************************************************************
+
+TASK [Execute QXDC Playbooks] **************************************************
+included: /home/quirino/ironqui/ansible/qxdc/99_install_base_applications.yml for ironqui-101 => (item=/home/quirino/ironqui/ansible/qxdc/99_install_base_applications.yml)
+
+TASK [Load package manager] ****************************************************
+ok: [ironqui-101]
+
+TASK [Define applications] *****************************************************
+ok: [ironqui-101]
+
+TASK [Update repositories] *****************************************************
+ [ERROR]: User interrupted execution

@@ -14,7 +14,7 @@
     - name: Install autotools package
       become: yes
       apt:
-        name: autotools
+        name: dh-autoreconf
 
     - name: Clone Arc Icon Theme repository
       git:
