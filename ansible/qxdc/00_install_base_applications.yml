@@ -60,7 +60,7 @@
           register: install_result
 
         - name: Reboot if task-xfce-desktop is installed
-          command: reboot
+          command: sudo reboot
           async: 0
           poll: 0
           become: yes
