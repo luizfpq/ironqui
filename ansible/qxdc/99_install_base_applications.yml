@@ -33,7 +33,6 @@
           - net-tools
           - software-properties-common
           - thunderbird
-          - thunderbird-l10n-pt-br
           - transmission-gtk
           - unrar-free
           - unzip
