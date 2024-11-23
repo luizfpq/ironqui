@@ -1,0 +1,45 @@
+---
+- name: Install and configure XFCE4 with default profile
+  become: yes
+
+  tasks:
+    - name: Verify XFCE
+      stat:
+        path: "/usr/share/xsessions/xfce.desktop"
+      register: xfce_installed
+
+    - name: Install XFCE if not installed
+      block:
+        - name: Update repositories
+          apt:
+            update_cache: yes
+
+        - name: Install XFCE4 desktop environment
+          apt:
+            name: task-xfce-desktop
+            state: present
+          become: yes
+
+        - name: Reboot system to apply changes
+          command: sudo reboot
+          async: 0
+          poll: 0
+          become: yes
+      when: xfce_installed.stat.exists == false
+
+    - name: Verify if default-xfce4-panels.tar.bz2 exists in assets folder
+      stat:
+        path: "{{ playbook_dir }}/assets/default-xfce4-panels.tar.bz2"
+      register: panel_file
+      failed_when: panel_file.stat.exists == false
+      msg: "The file default-xfce4-panels.tar.bz2 was not found in the assets folder."
+
+    - name: Load default-xfce4 profile into xfce4-panel
+      command: "xfce4-panel-profiles load {{ playbook_dir }}/assets/default-xfce4-panels.tar.bz2"
+      when: panel_file.stat.exists == true
+
+    - name: Display success message after profile loading
+      debug:
+        msg: "The XFCE4 panel profile has been successfully loaded!"
+      when: panel_file.stat.exists == true
+

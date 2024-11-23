@@ -1,0 +1,31 @@
+---
+- name: Verificar e carregar perfil do xfce4-panel
+  become: yes
+  tasks:
+    - name: Verificar se o pacote xfce4-panel-profiles está instalado
+      command: dpkg-query -l xfce4-panel-profiles
+      register: xfce4_panel_profiles_installed
+      ignore_errors: yes
+
+    - name: Instalar o pacote xfce4-panel-profiles se não estiver instalado
+      apt:
+        name: xfce4-panel-profiles
+        state: present
+      when: xfce4_panel_profiles_installed.rc != 0
+
+    - name: Verificar se o arquivo default-xfce4-panels.tar.bz2 existe na pasta assets
+      stat:
+        path: "{{ playbook_dir }}/assets/default-xfce4-panels.tar.bz2"
+      register: panel_file
+      failed_when: panel_file.stat.exists == false
+      msg: "O arquivo default-xfce4-panels.tar.bz2 não foi encontrado na pasta assets."
+
+    - name: Carregar o perfil do xfce4-panel usando o arquivo da pasta assets
+      command: "xfce4-panel-profiles load {{ playbook_dir }}/assets/default-xfce4-panels.tar.bz2"
+      when: panel_file.stat.exists == true
+
+    - name: Exibir sucesso após carregamento do perfil
+      debug:
+        msg: "Perfil do xfce4-panel carregado com sucesso!"
+      when: panel_file.stat.exists == true
+
