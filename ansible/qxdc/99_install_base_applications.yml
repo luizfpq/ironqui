@@ -22,8 +22,6 @@
           - curl
           - fonts-lyx
           - galculator
-          - gimp
-          - inkscape
           - gtk-update-icon-cache
           - keepassxc
           - locate
@@ -31,8 +29,6 @@
           - menulibre
           - neofetch
           - net-tools
-          - software-properties-common
-          - thunderbird
           - transmission-gtk
           - unrar-free
           - unzip
