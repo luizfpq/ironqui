@@ -24,13 +24,19 @@
         state: present
       when: arc_theme_installed.stat.exists == false
 
+     - name: Install dbus-x11 if not already installed
+      apt:
+        name: dbus-x11
+        state: present
+
     - name: Set default icon theme to Papirus
       shell: |
         export DISPLAY=:0
+        eval $(dbus-launch --sh-syntax)
         xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
-
 
     - name: Set default GTK theme to Arc
       shell: |
         export DISPLAY=:0
+        eval $(dbus-launch --sh-syntax)
         xfconf-query -c xsettings -p /Net/ThemeName -s Arc
