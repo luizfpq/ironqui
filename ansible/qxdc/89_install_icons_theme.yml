@@ -24,7 +24,7 @@
         state: present
       when: arc_theme_installed.stat.exists == false
 
-     - name: Install dbus-x11 if not already installed
+    - name: Install dbus-x11 if not already installed
       apt:
         name: dbus-x11
         state: present
@@ -39,4 +39,4 @@
       shell: |
         export DISPLAY=:0
         eval $(dbus-launch --sh-syntax)
-        xfconf-query -c xsettings -p /Net/ThemeName -s Arc
+        xfconf-query -c xsettings -p /Net/ThemeName -s Arc-Lighter
