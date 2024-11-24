@@ -1,22 +1,31 @@
 ---
-- name: Configure Icons and Themes
-  hosts: all
-  gather_facts: yes
-  become: true
+- name: Install and Configure Icon and Theme (Papirus and Arc)
+  become: yes
+  block:
+    - name: Check if Papirus icon theme is installed
+      stat:
+        path: "/usr/share/icons/Papirus"
+      register: papirus_icon_theme_installed
 
-  tasks:
-    - name: Ensure Papirus icon theme is installed
+    - name: Install Papirus icon theme if not installed
       apt:
         name: papirus-icon-theme
         state: present
+      when: papirus_icon_theme_installed.stat.exists == false
 
-    - name: Ensure Arc theme is installed
+    - name: Check if Arc theme is installed
+      stat:
+        path: "/usr/share/themes/Arc"
+      register: arc_theme_installed
+
+    - name: Install Arc theme if not installed
       apt:
         name: arc-theme
         state: present
+      when: arc_theme_installed.stat.exists == false
 
     - name: Set default icon theme to Papirus
-      command: gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
+      command: xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
 
-    - name: Set default GTK theme to Arc-Lighter
-      command: gsettings set org.gnome.desktop.interface gtk-theme 'Arc-Lighter'
+    - name: Set default GTK theme to Arc
+      command: xfconf-query -c xsettings -p /Net/ThemeName -s Arc
