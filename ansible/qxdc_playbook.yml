@@ -1,14 +1,7 @@
 - hosts: qxdc
   gather_facts: false
   tasks:
-    - name: List YAML files to be included (first loop)
-      debug:
-        msg: "Arquivo: {{ qxdc_file_list }}"
-      loop: "{{ query('fileglob', 'qxdc/*.yml') | sort | reverse }}"
-      loop_control:
-        loop_var: qxdc_file_list  # Define o nome da variável do loop
-
-    - name: Execute QXDC Playbooks (second loop)
+    - name: Execute QXDC Playbooks
       include_tasks: "{{ qxdc_task_file }}"
       loop: "{{ query('fileglob', 'qxdc/*.yml') | sort | reverse }}"
       loop_control:

@@ -1,8 +1,4 @@
----
-- name: Configure Icons and Themes
-  hosts: all
-  gather_facts: false
-  tasks:
+- tasks:
     - name: Ensure Papirus icon theme is installed
       apt:
         name: papirus-icon-theme

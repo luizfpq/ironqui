@@ -1,7 +1,5 @@
 ---
-- hosts: all
-  gather_facts: false
-  tasks:
+- tasks:
     - name: Install Papirus Folders tool
       shell: wget -qO- https://git.io/papirus-folders-install | sh
       args:
