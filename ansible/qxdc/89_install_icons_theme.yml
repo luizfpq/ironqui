@@ -1,27 +1,32 @@
 ---
-  - name: Install Icons and Themes
-    gather_facts: false
-    tasks:
-      - name: Ensure Papirus icon theme is installed
-        apt:
-          name: papirus-icon-theme
-          state: present
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure Papirus icon theme is installed
+      apt:
+        name: papirus-icon-theme
+        state: present
 
-      - name: Ensure Arc theme is installed
-        apt:
-          name: arc-theme
-          state: present
+    - name: Ensure Arc theme is installed
+      apt:
+        name: arc-theme
+        state: present
 
-      - name: Set default icon theme to Papirus
-        command: gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
+    - name: Set default icon theme to Papirus
+      command: gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
+      when: papirus_icon_theme_installed.stdout == "true"
 
-      - name: Set default theme to Arc-Lighter
-        command: gsettings set org.gnome.desktop.interface gtk-theme 'Arc-Lighter'
+    - name: Set default theme to Arc-Lighter
+      command: gsettings set org.gnome.desktop.interface gtk-theme 'Arc-Lighter'
+      when: arc_theme_installed.stdout == "true"
 
-      - name: Verify all tasks succeeded
-        debug:
-          msg: "All theme setup tasks completed successfully."
+    - name: Verify Papirus icon theme installation
+      shell: dpkg -l | grep -q papirus-icon-theme && echo true || echo false
+      register: papirus_icon_theme_installed
 
-      - name: Include Papirus Folders setup
-        include_tasks: 88_setup_papirus_folders.yml
-        when: not ansible_failed_tasks
+    - name: Verify Arc theme installation
+      shell: dpkg -l | grep -q arc-theme && echo true || echo false
+      register: arc_theme_installed
+
+    - name: Include Papirus Folders setup
+      include_tasks: setup_papirus_folders.yml

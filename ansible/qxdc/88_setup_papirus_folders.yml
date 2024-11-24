@@ -1,17 +1,17 @@
 ---
-  - name: Setup icon colors
-    gather_facts: false
-    tasks:
-      - name: Install Papirus Folders tool
-        shell: wget -qO- https://git.io/papirus-folders-install | sh
-        args:
-          creates: /usr/bin/papirus-folders
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install Papirus Folders tool
+      shell: wget -qO- https://git.io/papirus-folders-install | sh
+      args:
+        creates: /usr/bin/papirus-folders
 
-      - name: Configure Papirus Folders color to paleorange
-        command: papirus-folders -C paleorange --theme Papirus
-        when: papirus_folders_installed.stat.exists
+    - name: Configure Papirus Folders color to paleorange
+      command: papirus-folders -C paleorange --theme Papirus
+      when: papirus_folders_installed.stat.exists
 
-      - name: Check if Papirus Folders tool is installed
-        stat:
-          path: /usr/bin/papirus-folders
-        register: papirus_folders_installed
+    - name: Check if Papirus Folders tool is installed
+      stat:
+        path: /usr/bin/papirus-folders
+      register: papirus_folders_installed
