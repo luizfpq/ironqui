@@ -32,6 +32,8 @@
           - transmission-gtk
           - unrar-free
           - unzip
+          - papirus-icon-theme
+          - arc-theme
 
     - name: Update repositories
       become: yes
