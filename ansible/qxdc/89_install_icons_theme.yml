@@ -25,7 +25,12 @@
       when: arc_theme_installed.stat.exists == false
 
     - name: Set default icon theme to Papirus
-      command: xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
+      shell: |
+        export DISPLAY=:0
+        xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
+
 
     - name: Set default GTK theme to Arc
-      command: xfconf-query -c xsettings -p /Net/ThemeName -s Arc
+      shell: |
+        export DISPLAY=:0
+        xfconf-query -c xsettings -p /Net/ThemeName -s Arc
