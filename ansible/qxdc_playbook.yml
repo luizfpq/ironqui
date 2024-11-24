@@ -6,10 +6,10 @@
         msg: "Arquivo: {{ qxdc_file_list }}"
       loop: "{{ query('fileglob', 'qxdc/*.yml') | sort | reverse }}"
       loop_control:
-        loop_var: file  # Define o nome da variável do loop
+        loop_var: qxdc_file_list  # Define o nome da variável do loop
 
     - name: Execute QXDC Playbooks (second loop)
       include_tasks: "{{ qxdc_task_file }}"
       loop: "{{ query('fileglob', 'qxdc/*.yml') | sort | reverse }}"
       loop_control:
-        loop_var: task_file  # Define um nome diferente para a variável
+        loop_var: qxdc_task_file  # Define um nome diferente para a variável
