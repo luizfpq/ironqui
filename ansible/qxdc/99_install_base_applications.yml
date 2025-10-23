@@ -35,6 +35,7 @@
           - papirus-icon-theme
           - arc-theme
           - xfce4-panel-profiles
+          - copyq
 
     - name: Update repositories
       become: yes
