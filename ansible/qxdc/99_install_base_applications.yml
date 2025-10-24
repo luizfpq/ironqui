@@ -27,7 +27,6 @@
           - locate
           - lsb-release
           - menulibre
-          - neofetch
           - net-tools
           - transmission-gtk
           - unrar-free
@@ -36,6 +35,8 @@
           - arc-theme
           - xfce4-panel-profiles
           - copyq
+          - dconf-cli
+          - uuid-runtime
 
     - name: Update repositories
       become: yes
