@@ -17,8 +17,7 @@ Este repositório contém um conjunto de playbooks do Ansible, proporcionando a 
 
 O repositório QXDC, está sendo migrado para este conjunto de playbooks, de modo que todas as configurações anteriormente feitas pelo repositório luizfpq/qxdc, agora estarão disponíveis pelo "qxdc_playbook" foi transferido para este ambiente. Essa mudança visa consolidar todos os playbooks relacionados ao ansible em um único repositório, proporcionando uma organização mais eficiente das minhas customizações de ambiente.
 
---
-Perfeito — vou te dar um **tutorial passo a passo em Markdown** (em português) mostrando **do zero** como criar um `inventory.ini` simples e armazenar a senha do `sudo` de forma segura usando **Ansible Vault**. Incluo exemplos de arquivos, comandos e dicas de segurança (por exemplo: usar `vault_password_file` e permissões corretas).
+------
 
 # Como usar o Ansible Vault para guardar a senha do `sudo`
 
